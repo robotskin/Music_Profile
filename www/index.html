@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Profile</title>
+    <script src="common.js"></script>
+    <style>
+        * {
+            font-family: Tahoma, sans-serif;
+            font-size: 12pt;
+        }
+
+        th, td {
+            padding: 0.5em 1em;
+            border: solid 1px #eee;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Profile List</h1>
+        <table cellpadding="0" cellspacing="0" id="profiles">
+        </table>
+        <a href="create.html">Create Profile</a>
+    </div>
+    <script>
+        var burl = "http://10.211.55.2:8081/";
+
+        function doDelete(id) {
+            visitURL(burl + "deleteProfile/" + id, true, function (rp) {
+                layoutProfile(rp.responseText);
+            }, function () { })
+        }
+
+        function layoutProfile(jsData) {
+            var s = "";
+            var data = JSON.parse(jsData);
+            var atom;
+            var c = 0;
+            for (var pName in data) {
+                atom = data[pName];
+                if (c++ == 0) 
+                    s += "<tr><th>Name</th><th></th><th></th>";
+                s += "<tr><td>" + atom["name"] + "</td>";
+                s += "<td><a href='update.html?id=" + atom["id"] + "'>Detail</a></td>";
+                s += "<td><a href='#' onclick='doDelete(" + atom["id"] + ")'>Remove</a></td></tr>";
+            }
+            document.getElementById("profiles").innerHTML = s;
+        }
+
+        visitURL(burl, true, function (rp) {
+            layoutProfile(rp.responseText);
+        }, function () { })
+    </script>
+</body>
+</html>

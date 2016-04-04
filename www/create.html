@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Create Profile</title>
+    <script src="common.js"></script>
+    <style>
+        * {
+            font-family: Tahoma, sans-serif;
+            font-size: 12pt;
+        }
+
+        th, td {
+            padding: 0.5em 1em;
+            border: solid 1px #eee;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Create Profile</h1>
+        <form id="new_profile" method="post" action="http://10.211.55.2:8081/createProfile">
+            <input type="hidden" id="counter" value="1" />
+            <table cellpadding="0" cellspacing="0" id="profiles">
+                <tr><th>Property Name</th><th>Value</th></tr>
+                <tr><td>Profile Name</td><td><input type="text" name='name' value='' id="cname" /></td><td rowspan="999" valign="bottom"><input type="button" value="Add new property" onclick="addProperty();" /></td></tr>
+            </table>
+        </form>
+        <input type="button" value="Create Profile" onclick="doCreate()" />
+    </div>
+    <script>
+        var burl = "http://10.211.55.2:8081/";
+
+        function doCreate() {
+            var s = "<input name='name' value='" + document.getElementById("cname").value + "' />";
+            var cnt = document.getElementById("counter").value;
+            for (var i = 2; i <= cnt; i++) {
+                s += "<input name='" + document.getElementById("prop" + i).value + "' value='" + document.getElementById("value" + i).value + "' />";
+            }
+            document.getElementById("new_profile").innerHTML = s;
+            postForm(burl + "createProfile/", "new_profile", function () { document.location = "index.html"; });
+        }
+
+        function addProperty() {
+            var cnt = document.getElementById("counter").value;
+            cnt++;
+            document.getElementById("counter").value = cnt;
+            var s = document.getElementById("profiles").innerHTML;
+            s += "<tr><td><input type='text' id='prop" + cnt + "' value='Property " + cnt + "' /></td><td><input type='text' id='value" + cnt + "' value='' /></td></tr>";
+            document.getElementById("profiles").innerHTML = s;
+        }
+
+    </script>
+</body>
+</html>
